@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model projects {
+  ProjectID   Int         @id @default(autoincrement())
+  ProjectName String      @db.VarChar(100)
+  Description String?     @db.VarChar(255)
+  CreatedBy   Int?
+  CreatedAt   DateTime?   @db.DateTime(0)
+  users       users?      @relation(fields: [CreatedBy], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "Projects_Users")
+  tasklists   tasklists[]
+
+  @@index([CreatedBy], map: "Projects_Users_idx")
+}
+
+model roles {
+  RoleID     Int          @id
+  RoleName   String       @unique(map: "RoleName_UNIQUE") @db.VarChar(50)
+  user_roles user_roles[]
+}
+
+model task_comments {
+  CommentID   Int     @id @default(autoincrement())
+  TaskID      Int?
+  UserID      Int?
+  CommentText String  @db.VarChar(255)
+  CreatedAt   String? @db.VarChar(45)
+  tasks       tasks?  @relation(fields: [TaskID], references: [TaskID], onDelete: NoAction, onUpdate: NoAction, map: "Task_TaskComments")
+  users       users?  @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "Users_TaskComments")
+
+  @@index([TaskID], map: "Task_TaskComments_idx")
+  @@index([UserID], map: "Users_TaskComments_idx")
+}
+
+model task_history {
+  HistoryID  Int       @id @default(autoincrement())
+  TaskID     Int?
+  ChangedBy  Int?
+  ChangeType String    @db.VarChar(50)
+  ChangeTime DateTime? @db.DateTime(0)
+  users      users?    @relation(fields: [ChangedBy], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "TaskHistory_Users")
+
+  @@index([TaskID], map: "TaskHistory_Tasks_idx")
+  @@index([ChangedBy], map: "TaskHistory_Users_idx")
+}
+
+model tasklists {
+  ListID    Int       @id @default(autoincrement())
+  ProjectID Int?
+  ListName  String    @db.VarChar(100)
+  projects  projects? @relation(fields: [ProjectID], references: [ProjectID], onDelete: NoAction, onUpdate: NoAction, map: "Project_Task")
+  tasks     tasks[]
+
+  @@index([ProjectID], map: "Project_Task_idx")
+}
+
+model tasks {
+  TaskID        Int             @id @default(autoincrement())
+  ListID        Int?
+  AssignedTo    Int?
+  Title         String          @db.VarChar(100)
+  Description   String?         @db.VarChar(255)
+  Priority      String?         @db.VarChar(10)
+  Status        String?         @db.VarChar(20)
+  CreatedAt     DateTime?       @db.DateTime(0)
+  DueDate       DateTime?       @db.DateTime(0)
+  task_comments task_comments[]
+  tasklists     tasklists?      @relation(fields: [ListID], references: [ListID], onDelete: NoAction, onUpdate: NoAction, map: "Tasks_TaskList")
+  users         users?          @relation(fields: [AssignedTo], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "Tasks_User")
+
+  @@index([ListID], map: "Tasks_TaskList_idx")
+  @@index([AssignedTo], map: "Tasks_User_idx")
+}
+
+model user_roles {
+  UserRoleID Int    @id @default(autoincrement())
+  UserID     Int?
+  RoleID     Int?
+  roles      roles? @relation(fields: [RoleID], references: [RoleID], onDelete: NoAction, onUpdate: NoAction, map: "UserRole_Role")
+  users      users? @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "UserRole_Users")
+
+  @@index([RoleID], map: "UserRole_Role_idx")
+  @@index([UserID], map: "UserRole_Users_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  UserID        Int             @id @default(autoincrement())
+  UserName      String          @unique(map: "UserName_UNIQUE") @db.VarChar(50)
+  Email         String          @unique(map: "Email_UNIQUE") @db.VarChar(100)
+  PasswordHash  String          @db.VarChar(255)
+  CreatedAt     DateTime?       @db.Date
+  projects      projects[]
+  task_comments task_comments[]
+  task_history  task_history[]
+  tasks         tasks[]
+  user_roles    user_roles[]
+}
