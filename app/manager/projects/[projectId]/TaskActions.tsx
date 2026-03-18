@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, AlertTriangle, X } from "lucide-react";
+import { Trash2, AlertTriangle, X, Loader2 } from "lucide-react";
 import { AddTaskModal } from "./AddTaskModal";
 import { deleteTask } from "./actions";
 
@@ -79,7 +79,14 @@ export function TaskActions({ task, projectId, teamMembers }: { task: any; proje
                                 disabled={isDeleting}
                                 className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                             >
-                                {isDeleting ? "Deleting..." : "Delete Task"}
+                                {isDeleting ? (
+                                    <>
+                                        <Loader2 className="-ml-0.5 size-4 animate-spin" />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    "Delete Task"
+                                )}
                             </button>
                         </div>
                     </div>

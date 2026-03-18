@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
-    UserPlus, X, Mail, Lock, User as UserIcon, Shield, Eye, EyeOff,
+    UserPlus, X, Mail, Lock, User as UserIcon, Shield, Eye, EyeOff, Loader2
 } from "lucide-react";
 import { createStaff } from "./actions";
 
@@ -15,7 +15,12 @@ function SubmitButton() {
             disabled={pending}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all w-full sm:w-auto"
         >
-            {pending ? "Creating..." : (
+            {pending ? (
+                <>
+                    <Loader2 className="-ml-0.5 size-4 animate-spin" />
+                    Creating...
+                </>
+            ) : (
                 <>
                     <UserPlus className="-ml-0.5 size-4" />
                     Create Staff

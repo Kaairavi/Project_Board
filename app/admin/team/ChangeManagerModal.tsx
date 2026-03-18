@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
-import { Pencil, X, Briefcase, ChevronDown, Check } from "lucide-react";
+import { Pencil, X, Briefcase, ChevronDown, Check, Loader2 } from "lucide-react";
 import { updateProjectManager } from "./actions";
 
 type Manager = { UserID: number; UserName: string };
@@ -15,7 +15,14 @@ function SubmitButton({ selectedId }: { selectedId: number | null }) {
             disabled={pending || !selectedId}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full sm:w-auto"
         >
-            {pending ? "Saving..." : "Save"}
+            {pending ? (
+                <>
+                    <Loader2 className="-ml-0.5 size-4 animate-spin" />
+                    Saving...
+                </>
+            ) : (
+                "Save"
+            )}
         </button>
     );
 }
