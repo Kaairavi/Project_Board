@@ -1,10 +1,9 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 model projects {
@@ -12,7 +11,7 @@ model projects {
   ProjectName String      @db.VarChar(100)
   Description String?     @db.VarChar(255)
   CreatedBy   Int?
-  CreatedAt   DateTime?   @db.DateTime(0)
+  CreatedAt   DateTime?   @default(now())
   users       users?      @relation(fields: [CreatedBy], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "Projects_Users")
   tasklists   tasklists[]
 
@@ -43,7 +42,7 @@ model task_history {
   TaskID     Int?
   ChangedBy  Int?
   ChangeType String    @db.VarChar(50)
-  ChangeTime DateTime? @db.DateTime(0)
+  ChangeTime DateTime? @default(now())
   users      users?    @relation(fields: [ChangedBy], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "TaskHistory_Users")
 
   @@index([TaskID], map: "TaskHistory_Tasks_idx")
@@ -68,8 +67,8 @@ model tasks {
   Description   String?         @db.VarChar(255)
   Priority      String?         @db.VarChar(10)
   Status        String?         @db.VarChar(20)
-  CreatedAt     DateTime?       @db.DateTime(0)
-  DueDate       DateTime?       @db.DateTime(0)
+  CreatedAt     DateTime?       @default(now())
+  DueDate       DateTime?       @default(now())
   task_comments task_comments[]
   tasklists     tasklists?      @relation(fields: [ListID], references: [ListID], onDelete: NoAction, onUpdate: NoAction, map: "Tasks_TaskList")
   users         users?          @relation(fields: [AssignedTo], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "Tasks_User")

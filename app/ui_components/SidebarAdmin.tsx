@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
-import { LayoutDashboard, FolderKanban, BarChart3, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, FolderKanban, BarChart3, LogOut, ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { logout } from "@/app/lib/actions";
 
 interface SidebarProps {
@@ -117,6 +117,13 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, userName }: Sideb
           label="Projects"
           active={pathname.startsWith("/admin/projects")}
           icon={FolderKanban}
+          isCollapsed={isCollapsed}
+        />
+        <NavItem
+          href="/admin/team"
+          label="Team"
+          active={pathname.startsWith("/admin/team")}
+          icon={Users}
           isCollapsed={isCollapsed}
         />
       </nav>

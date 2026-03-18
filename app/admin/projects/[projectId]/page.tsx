@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { MarkCompletedButton } from "./MarkCompletedButton";
 import { EditTaskModal } from "./EditTaskModal";
+import { AddTaskModal } from "./AddTaskModal";
+import { DeleteTaskButton } from "./DeleteTaskButton";
 
 type Priority = "High" | "Medium" | "Low";
 
@@ -265,11 +267,14 @@ export default async function ProjectPageAdmin({
 
         {/* Tasks table */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-800/50 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700/80">
-            <LayoutList className="size-5 text-slate-500 dark:text-slate-400" aria-hidden />
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              Tasks
-            </h2>
+          <div className="flex items-center justify-between gap-2 px-6 py-4 border-b border-slate-200 dark:border-slate-700/80">
+            <div className="flex items-center gap-2">
+              <LayoutList className="size-5 text-slate-500 dark:text-slate-400" aria-hidden />
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                Tasks
+              </h2>
+            </div>
+            <AddTaskModal projectId={id} teamMembers={teamMembers} />
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -342,6 +347,7 @@ export default async function ProjectPageAdmin({
                               <MarkCompletedButton taskId={task.TaskID} projectId={id} />
                             )}
                             <EditTaskModal projectId={id} teamMembers={teamMembers} task={task} />
+                            <DeleteTaskButton task={task} projectId={id} />
                           </div>
                         </td>
                       </tr>
